@@ -5,9 +5,13 @@
 import mongoose from "mongoose";
 
 const doctorSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, "Please enter name"],
+    required: [true, "Please enter first name"],
+  },
+  lastName: {
+    type: String,
+    required: [true, "Please enter last name"],
   },
   email: {
     type: String,

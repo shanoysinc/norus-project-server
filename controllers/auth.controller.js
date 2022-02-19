@@ -6,8 +6,14 @@ import { generateToken } from "../helpers/index.js";
 
 export const patientSignup = async (req, res) => {
   try {
-    const { name, occupation, medicalHistoryDetials, email, password } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      occupation,
+      medicalHistoryDetials,
+      email,
+      password,
+    } = req.body;
 
     const patientExist = await Patient.findOne({ email });
 
@@ -18,7 +24,8 @@ export const patientSignup = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 12);
 
     const patient = new Patient({
-      name,
+      firstName,
+      lastName,
       occupation,
       medicalHistoryDetials,
       email,
@@ -40,7 +47,6 @@ export const patientLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log("run");
     const patient = await Patient.findOne({ email }).select("+password");
 
     if (!patient) {
