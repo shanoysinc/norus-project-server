@@ -1,13 +1,12 @@
 import { Doctor } from "../models/Doctor.js";
 import { Patient } from "../models/Patient.js";
-import jsonwebToken from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Roles } from "../const/index.js";
+import { generateToken } from "../helpers/index.js";
 
 export const patientSignup = async (req, res) => {
   try {
-    console.log("body", req.body);
-    const { name, occupation, medicalHistoryDetials, email, password, doctor } =
+    const { name, occupation, medicalHistoryDetials, email, password } =
       req.body;
 
     const patientExist = await Patient.findOne({ email });
@@ -24,7 +23,6 @@ export const patientSignup = async (req, res) => {
       medicalHistoryDetials,
       email,
       password: hashPassword,
-      doctor,
     });
 
     await patient.save();
@@ -50,7 +48,6 @@ export const patientLogin = async (req, res) => {
     }
 
     const passwordMatch = await bcrypt.compare(password, patient.password);
-    console.log("password", passwordMatch);
 
     if (!passwordMatch) {
       throw Error("Please enter correct credentials");
@@ -67,9 +64,29 @@ export const patientLogin = async (req, res) => {
   }
 };
 
-export const doctorLogin = async () => {};
+export const doctorLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const generateToken = (userId, userRole) => {
-  const token = jsonwebToken.sign({ userId, userRole }, process.env.JWT_SECRET);
-  return token;
+    const doctor = await Doctor.findOne({ email }).select("+password");
+
+    if (!doctor) {
+      throw Error("Please enter correct credentials");
+    }
+
+    const passwordMatch = await bcrypt.compare(password, doctor.password);
+
+    if (!passwordMatch) {
+      throw Error("Please enter correct credentials");
+    }
+
+    const token = generateToken(doctor._id, Roles.DOCTOR);
+
+    res.json({ doctor, token });
+  } catch (err) {
+    res.json({
+      error: true,
+      errorMessage: err.message,
+    });
+  }
 };
