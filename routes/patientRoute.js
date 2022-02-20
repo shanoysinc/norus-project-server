@@ -10,20 +10,16 @@ import { authRole } from "../middleware/authRole.js";
 import { Roles } from "../const/index.js";
 
 const router = express.Router();
+const patientRole = Roles.PATIENT;
 
-router.put("/", verifyToken, authRole(Roles.PATIENT), editProfile);
-router.delete("/", verifyToken, authRole(Roles.PATIENT), deletePatient);
+router.put("/", verifyToken, authRole(patientRole), editProfile);
+router.delete("/", verifyToken, authRole(patientRole), deletePatient);
 
-router.get(
-  "/appointment",
-  verifyToken,
-  authRole(Roles.PATIENT),
-  getAppointments
-);
+router.get("/appointment", verifyToken, authRole(patientRole), getAppointments);
 router.post(
   "/appointment",
   verifyToken,
-  authRole(Roles.PATIENT),
+  authRole(patientRole),
   createAppointment
 );
 

@@ -8,13 +8,13 @@ import { authRole } from "../middleware/authRole.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
-
+const doctorRole = Roles.DOCTOR;
 router.get(
   "/appointments",
   verifyToken,
-  authRole(Roles.DOCTOR),
+  authRole(doctorRole),
   getDoctorAppointments
 );
-router.get("/patients", verifyToken, authRole(Roles.DOCTOR), getDoctorPatients);
+router.get("/patients", verifyToken, authRole(doctorRole), getDoctorPatients);
 
 export default router;
