@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import AuthRouter from "./routes/authRoute.js";
 import PatientRouter from "./routes/patientRoute.js";
+import DoctorRouter from "./routes/doctorRoute.js";
 
 const server = express();
 const PORT = process.env.PORT || 4000;
@@ -14,6 +15,7 @@ server.use(express.urlencoded({ extended: false }));
 //routes
 server.use(AuthRouter);
 server.use("/patient", PatientRouter);
+server.use("/doctor", DoctorRouter);
 
 mongoose
   .connect(process.env.MONGO_URL)
