@@ -1,5 +1,7 @@
 import validator from "validator";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
 const isEmail = validator.isEmail;
 
 const doctorSchema = new mongoose.Schema({
@@ -10,6 +12,10 @@ const doctorSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: [true, "Please enter last name"],
+  },
+  available: {
+    type: Boolean,
+    default: true,
   },
   token: {
     type: String,
@@ -30,12 +36,15 @@ const doctorSchema = new mongoose.Schema({
   patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Patient" }],
 });
 
-// doctorSchema.pre("save", async function (next) {
-//   console.log("running hash");
-//   const doctor = this;
-//   const hashPassword = await bcrypt.hash(doctor.password, 12);
-//   doctor.password = hashPassword;
-//   next();
-// });
+doctorSchema.pre("save", async function (next) {
+  const doctor = this;
+
+  // only hash the password if it has been modified (or is new)
+  if (!doctor.isModified("password")) return next();
+
+  const hashPassword = await bcrypt.hash(doctor.password, 12);
+  doctor.password = hashPassword;
+  next();
+});
 
 export const Doctor = mongoose.model("Doctor", doctorSchema);
