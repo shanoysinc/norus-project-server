@@ -1,3 +1,4 @@
 .env
-server-api.http
+doctor-api.http
+patient-api.http
 node_modules
