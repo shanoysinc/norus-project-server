@@ -3,6 +3,7 @@ import { Patient } from "../models/Patient.js";
 import bcrypt from "bcrypt";
 import { Roles } from "../const/index.js";
 import { generateToken } from "../helpers/index.js";
+import { assignAvailableDoctor } from "../helpers/doctor/assignAvailableDoc.js";
 
 export const patientSignup = async (req, res) => {
   try {
@@ -21,18 +22,27 @@ export const patientSignup = async (req, res) => {
       throw Error("patient already exist");
     }
 
-    const hashPassword = await bcrypt.hash(password, 12);
+    const availableDoctor = await assignAvailableDoctor();
 
+    console.log("aval", availableDoctor);
     const patient = new Patient({
       firstName,
       lastName,
       occupation,
       medicalHistoryDetials,
       email,
-      password: hashPassword,
+      password,
+      doctor: availableDoctor ? availableDoctor._id : null,
     });
 
     await patient.save();
+
+    if (availableDoctor) {
+      await Doctor.findOneAndUpdate(
+        { _id: availableDoctor._id },
+        { $push: patient._id }
+      );
+    }
     const token = generateToken(patient._id, Roles.PATIENT);
 
     await patient.set({ token });
@@ -141,3 +151,5 @@ export const doctorLogout = async (req, res) => {
     res.json({ success: false });
   }
 };
+
+// improve assign doctor algorithm by checking only appointment with dates that have yet to come
