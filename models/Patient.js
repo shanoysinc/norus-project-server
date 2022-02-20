@@ -23,6 +23,9 @@ const patientSchema = new mongoose.Schema({
   IP: {
     type: String,
   },
+  token: {
+    type: String,
+  },
   email: {
     type: String,
     required: [true, "Please enter an email"],
