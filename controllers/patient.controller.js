@@ -1,6 +1,32 @@
 import { Patient } from "../models/Patient.js";
 import bcyrpt from "bcrypt";
 import { Appointment } from "../models/Appointment.js";
+import { Doctor } from "../models/Doctor.js";
+
+export const editProfile = async (req, res) => {
+  try {
+    const patientId = req.user;
+    const patientInfoToEdit = {};
+
+    const { occupation, medicalHistoryDetails } = req.body;
+
+    if (occupation) {
+      patientInfoToEdit.occupation = occupation;
+    }
+    if (medicalHistoryDetails) {
+      patientInfoToEdit.medicalHistoryDetails = medicalHistoryDetails;
+    }
+
+    await Patient.findOneAndUpdate(
+      { _id: patientId },
+      { $set: patientInfoToEdit }
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false });
+  }
+};
 
 export const deletePatient = async (req, res) => {
   try {
@@ -58,6 +84,11 @@ export const createAppointment = async (req, res) => {
       doctor,
       patient: userId,
     });
+
+    await Doctor.findOneAndUpdate(
+      { _id: doctor },
+      { $push: { appointment: appointment._id } }
+    );
 
     await appointment.save();
     await Patient.findOneAndUpdate({ _id: userId }, { $set: { doctor } });
