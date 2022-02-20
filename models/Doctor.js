@@ -1,8 +1,6 @@
-// const mongoose = require("mongoose");
-// const { isEmail } = require("validator");
-// const bcrypt = require("bcrypt");
-
+import validator from "validator";
 import mongoose from "mongoose";
+const isEmail = validator.isEmail;
 
 const doctorSchema = new mongoose.Schema({
   firstName: {
@@ -12,6 +10,9 @@ const doctorSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: [true, "Please enter last name"],
+  },
+  token: {
+    type: String,
   },
   email: {
     type: String,
@@ -28,5 +29,13 @@ const doctorSchema = new mongoose.Schema({
   appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Appointment" }],
   patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Patient" }],
 });
+
+// doctorSchema.pre("save", async function (next) {
+//   console.log("running hash");
+//   const doctor = this;
+//   const hashPassword = await bcrypt.hash(doctor.password, 12);
+//   doctor.password = hashPassword;
+//   next();
+// });
 
 export const Doctor = mongoose.model("Doctor", doctorSchema);
