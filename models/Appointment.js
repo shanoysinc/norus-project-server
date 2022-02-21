@@ -11,6 +11,10 @@ const appointmentSchema = new mongoose.Schema({
   date: {
     type: Date,
   },
+  patientIP: {
+    type: String,
+  },
+
   approve: {
     type: Boolean,
     default: false,

@@ -24,7 +24,6 @@ export const patientSignup = async (req, res) => {
 
     const availableDoctor = await assignAvailableDoctor();
 
-    console.log("aval", availableDoctor);
     const patient = new Patient({
       firstName,
       lastName,
@@ -33,6 +32,7 @@ export const patientSignup = async (req, res) => {
       email,
       password,
       doctor: availableDoctor ? availableDoctor._id : null,
+      IP: req.connection.remoteAddress,
     });
 
     await patient.save();
@@ -73,7 +73,7 @@ export const patientLogin = async (req, res) => {
     }
     const token = generateToken(patient._id, Roles.PATIENT);
 
-    await patient.set({ token });
+    await patient.set({ token, IP: req.connection.remoteAddress });
     await patient.save();
 
     res.json({ patient });

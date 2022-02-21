@@ -83,6 +83,7 @@ export const createAppointment = async (req, res) => {
       date,
       doctor,
       patient: userId,
+      patientIP: req.connection.remoteAddress,
     });
 
     await Doctor.findOneAndUpdate(
