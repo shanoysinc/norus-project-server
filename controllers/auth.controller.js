@@ -48,11 +48,12 @@ export const patientSignup = async (req, res) => {
     await patient.set({ token });
     await patient.save();
 
-    res.json({ patient });
+    res.json({ patient, auth: true });
   } catch (err) {
     res.json({
       error: true,
       errorMessage: err.message,
+      auth: false,
     });
   }
 };
@@ -76,11 +77,12 @@ export const patientLogin = async (req, res) => {
     await patient.set({ token, IP: req.connection.remoteAddress });
     await patient.save();
 
-    res.json({ patient });
+    res.json({ patient, auth: true });
   } catch (err) {
     res.json({
       error: true,
       errorMessage: err.message,
+      auth: false,
     });
   }
 };
@@ -124,11 +126,12 @@ export const doctorLogin = async (req, res) => {
     await doctor.set({ token });
     await doctor.save();
 
-    res.json({ doctor });
+    res.json({ doctor, auth: true });
   } catch (err) {
     res.json({
       error: true,
       errorMessage: err.message,
+      auth: false,
     });
   }
 };
