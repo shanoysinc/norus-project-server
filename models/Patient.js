@@ -68,6 +68,12 @@ const patientSchema = new mongoose.Schema({
   doctor: { type: mongoose.Schema.Types.ObjectId, ref: "Doctor" },
 });
 
+patientSchema.methods.toJSON = function () {
+  const patient = this.toObject();
+  delete patient.password;
+  return patient;
+};
+
 patientSchema.pre("save", async function (next) {
   const patient = this;
 
