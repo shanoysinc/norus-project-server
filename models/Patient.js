@@ -12,6 +12,34 @@ const patientSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter last name"],
   },
+  address: {
+    type: String,
+    default: "N/A",
+  },
+  gender: {
+    type: String,
+    required: [true, "Please enter gender"],
+  },
+  age: {
+    type: Number,
+    required: [true, "Please enter gender"],
+  },
+  height: {
+    type: String,
+    default: "N/A",
+  },
+  weight: {
+    type: String,
+    default: "N/A",
+  },
+  phoneNumber: {
+    type: String,
+    required: [
+      true,
+      "Please enter your phone number so the doctor can stay in contact with you",
+    ],
+  },
+
   occupation: {
     type: String,
   },
