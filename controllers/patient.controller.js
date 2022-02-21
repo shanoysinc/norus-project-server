@@ -6,21 +6,8 @@ import { Doctor } from "../models/Doctor.js";
 export const editProfile = async (req, res) => {
   try {
     const patientId = req.user;
-    const patientInfoToEdit = {};
 
-    const { occupation, medicalHistoryDetails } = req.body;
-
-    if (occupation) {
-      patientInfoToEdit.occupation = occupation;
-    }
-    if (medicalHistoryDetails) {
-      patientInfoToEdit.medicalHistoryDetails = medicalHistoryDetails;
-    }
-
-    await Patient.findOneAndUpdate(
-      { _id: patientId },
-      { $set: patientInfoToEdit }
-    );
+    await Patient.findOneAndUpdate({ _id: patientId }, { $set: req.body });
 
     res.json({ success: true });
   } catch (err) {
