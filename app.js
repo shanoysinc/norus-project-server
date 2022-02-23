@@ -8,7 +8,12 @@ import DoctorRouter from "./routes/doctorRoute.js";
 const server = express();
 const PORT = process.env.PORT || 4000;
 
-server.use(cors());
+server.use(
+  cors({
+    credentials: true,
+    origin: process.env.HOST_URL,
+  })
+);
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
