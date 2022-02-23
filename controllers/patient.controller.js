@@ -2,7 +2,6 @@ import { Patient } from "../models/Patient.js";
 import bcyrpt from "bcrypt";
 import { Appointment } from "../models/Appointment.js";
 import { Doctor } from "../models/Doctor.js";
-import { assignAvailableDoctor } from "../helpers/doctor/assignAvailableDoc.js";
 
 export const getPatient = async (req, res) => {
   try {
@@ -50,7 +49,31 @@ export const deletePatient = async (req, res) => {
     if (!passwordMatch) {
       throw Error("invalid credentials");
     }
+    const patientAppointments = await Appointment.find({
+      patient: req.user.userId,
+    });
+
+    for (const appointment of patientAppointments) {
+      await Doctor.findOneAndUpdate(
+        { _id: appointment.doctor },
+        {
+          $pull: { appointments: appointment._id },
+        }
+      );
+    }
+
+    await Appointment.deleteMany({
+      patient: req.user.userId,
+    });
+
     await Patient.findOneAndDelete({ _id: req.user.userId });
+
+    await Doctor.findOneAndUpdate(
+      { _id: patient.doctor },
+      {
+        $pull: { patients: patient._id },
+      }
+    );
 
     res.send({ success: true });
   } catch (err) {
@@ -91,8 +114,6 @@ export const createAppointment = async (req, res) => {
       patient: userId,
       patientIP: req.connection.remoteAddress,
     });
-
-    console.log("ipa", appointment._id);
 
     await Doctor.findOneAndUpdate(
       { _id: doctor },
