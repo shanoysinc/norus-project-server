@@ -40,7 +40,7 @@ export const patientSignup = async (req, res) => {
     if (availableDoctor) {
       await Doctor.findOneAndUpdate(
         { _id: availableDoctor._id },
-        { $push: patient._id }
+        { $push: { patients: patient._id } }
       );
     }
     const token = generateToken(patient._id, Roles.PATIENT);
@@ -87,25 +87,6 @@ export const patientLogin = async (req, res) => {
   }
 };
 
-export const patientLogout = async (req, res) => {
-  try {
-    const { userId } = req.user;
-
-    if (!userId) {
-      throw Error("unathorize access");
-    }
-
-    const patient = await Patient.findOne({ _id: userId });
-
-    await patient.set({ token: "" });
-    await patient.save();
-
-    res.json({ success: true });
-  } catch (err) {
-    res.json({ success: false });
-  }
-};
-
 export const doctorLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -136,23 +117,33 @@ export const doctorLogin = async (req, res) => {
   }
 };
 
-export const doctorLogout = async (req, res) => {
+export const userLogout = async (req, res) => {
   try {
-    const { userId } = req.user;
+    const { userId, userRole } = req.user;
 
     if (!userId) {
       throw Error("unathorize access");
     }
 
-    const doctor = await Doctor.findOne({ _id: userId });
+    if (userRole === Roles.PATIENT) {
+      const patient = await Patient.findOne({ _id: userId });
 
-    await doctor.set({ token: "" });
-    await doctor.save();
+      await patient.set({ token: "" });
+      await patient.save();
 
-    res.json({ success: true });
+      return res.json({ success: true });
+    }
+    if (userRole === Roles.DOCTOR) {
+      const doctor = await Doctor.findOne({ _id: userId });
+
+      await doctor.set({ token: "" });
+      await doctor.save();
+      return res.json({ success: true });
+    }
+
+    res.json({ success: false });
   } catch (err) {
+    console.log(err);
     res.json({ success: false });
   }
 };
-
-// improve assign doctor algorithm by checking only appointment with dates that have yet to come
