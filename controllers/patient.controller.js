@@ -13,7 +13,7 @@ export const getPatient = async (req, res) => {
 
     res.json({ auth: true, patient });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
       auth: false,
@@ -28,7 +28,7 @@ export const editProfile = async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    res.json({ success: false });
+    res.status(401).json({ success: false });
   }
 };
 
@@ -77,7 +77,7 @@ export const deletePatient = async (req, res) => {
 
     res.send({ success: true });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });
@@ -92,7 +92,7 @@ export const getAppointments = async (req, res) => {
 
     res.json({ appointments });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });
@@ -125,7 +125,7 @@ export const createAppointment = async (req, res) => {
 
     res.json({ appointment });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });

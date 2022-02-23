@@ -50,7 +50,7 @@ export const patientSignup = async (req, res) => {
 
     res.json({ patient, auth: true });
   } catch (err) {
-    res.json({
+    res.status(400).json({
       error: true,
       errorMessage: err.message,
       auth: false,
@@ -79,7 +79,7 @@ export const patientLogin = async (req, res) => {
 
     res.json({ patient, auth: true });
   } catch (err) {
-    res.json({
+    res.status(400).json({
       error: true,
       errorMessage: err.message,
       auth: false,
@@ -109,7 +109,7 @@ export const doctorLogin = async (req, res) => {
 
     res.json({ doctor, auth: true });
   } catch (err) {
-    res.json({
+    res.status(400).json({
       error: true,
       errorMessage: err.message,
       auth: false,
@@ -144,6 +144,6 @@ export const userLogout = async (req, res) => {
     res.json({ success: false });
   } catch (err) {
     console.log(err);
-    res.json({ success: false });
+    res.status(401).json({ success: false });
   }
 };

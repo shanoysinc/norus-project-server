@@ -10,7 +10,7 @@ export const getDoctor = async (req, res) => {
 
     res.json({ auth: true, doctor });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });
@@ -24,7 +24,7 @@ export const getDoctorPatients = async (req, res) => {
 
     res.json({ patients });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });
@@ -41,7 +41,7 @@ export const getDoctorAppointments = async (req, res) => {
 
     res.json({ appointments });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });
@@ -61,7 +61,7 @@ export const updateDoctorAppointments = async (req, res) => {
 
     res.json({ appointment });
   } catch (err) {
-    res.json({
+    res.status(401).json({
       error: true,
       errorMessage: err.message,
     });
