@@ -1,6 +1,7 @@
 import { Appointment } from "../models/Appointment.js";
 import { Doctor } from "../models/Doctor.js";
 import { Patient } from "../models/Patient.js";
+import { PatientTimlineSchema } from "../models/patientTimline.js";
 
 export const getDoctor = async (req, res) => {
   try {
@@ -56,8 +57,20 @@ export const updateDoctorAppointments = async (req, res) => {
       { _id: currentAppointmentId },
       {
         $set: { approve: !approve },
+      },
+      {
+        returnOriginal: false,
       }
     );
+    console.log(appointment);
+
+    const timeline = new PatientTimlineSchema({
+      patient: appointment.patient,
+      appointment: appointment._id,
+      approve: appointment.approve,
+    });
+
+    await timeline.save();
 
     res.json({ appointment });
   } catch (err) {
