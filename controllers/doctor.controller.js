@@ -62,7 +62,6 @@ export const updateDoctorAppointments = async (req, res) => {
         returnOriginal: false,
       }
     );
-    console.log(appointment);
 
     const timeline = new PatientTimlineSchema({
       patient: appointment.patient,
