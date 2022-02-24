@@ -11,9 +11,15 @@ export const patientSignup = async (req, res) => {
       firstName,
       lastName,
       occupation,
-      medicalHistoryDetials,
+      medicalHistoryDetails,
       email,
+      age,
+      gender,
       password,
+      height,
+      weight,
+      address,
+      phoneNumber,
     } = req.body;
 
     const patientExist = await Patient.findOne({ email });
@@ -28,9 +34,15 @@ export const patientSignup = async (req, res) => {
       firstName,
       lastName,
       occupation,
-      medicalHistoryDetials,
+      medicalHistoryDetails,
       email,
       password,
+      age,
+      gender,
+      phoneNumber,
+      height,
+      weight,
+      address,
       doctor: availableDoctor ? availableDoctor._id : null,
       IP: req.connection.remoteAddress,
     });
