@@ -2,6 +2,7 @@ import { Patient } from "../models/Patient.js";
 import bcyrpt from "bcrypt";
 import { Appointment } from "../models/Appointment.js";
 import { Doctor } from "../models/Doctor.js";
+import { PatientTimlineSchema } from "../models/patientTimline.js";
 
 export const getPatient = async (req, res) => {
   try {
@@ -12,6 +13,28 @@ export const getPatient = async (req, res) => {
     });
 
     res.json({ auth: true, patient });
+  } catch (err) {
+    res.status(401).json({
+      error: true,
+      errorMessage: err.message,
+      auth: false,
+    });
+  }
+};
+
+export const getPatientTimeline = async (req, res) => {
+  try {
+    const patientId = req.user.userId;
+
+    const patientTimeline = await PatientTimlineSchema.find({
+      patient: patientId,
+    })
+      .skip(0)
+      .limit(10)
+      .sort({ createdAt: -1 })
+      .populate("appointment");
+
+    res.json({ patientTimeline });
   } catch (err) {
     res.status(401).json({
       error: true,
@@ -114,6 +137,13 @@ export const createAppointment = async (req, res) => {
       patient: userId,
       patientIP: req.connection.remoteAddress,
     });
+
+    const timeline = new PatientTimlineSchema({
+      patient: userId,
+      appointment: appointment._id,
+    });
+
+    await timeline.save();
 
     await Doctor.findOneAndUpdate(
       { _id: doctor },
