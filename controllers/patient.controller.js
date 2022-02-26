@@ -2,7 +2,7 @@ import { Patient } from "../models/Patient.js";
 import bcyrpt from "bcrypt";
 import { Appointment } from "../models/Appointment.js";
 import { Doctor } from "../models/Doctor.js";
-import { PatientTimlineSchema } from "../models/patientTimline.js";
+import { PatientTimline } from "../models/patientTimline.js";
 
 export const getPatient = async (req, res) => {
   try {
@@ -26,7 +26,7 @@ export const getPatientTimeline = async (req, res) => {
   try {
     const patientId = req.user.userId;
 
-    const patientTimeline = await PatientTimlineSchema.find({
+    const patientTimeline = await PatientTimline.find({
       patient: patientId,
     })
       .skip(0)
@@ -138,7 +138,7 @@ export const createAppointment = async (req, res) => {
       patientIP: req.connection.remoteAddress,
     });
 
-    const timeline = new PatientTimlineSchema({
+    const timeline = new PatientTimline({
       patient: userId,
       appointment: appointment._id,
     });

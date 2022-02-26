@@ -1,7 +1,7 @@
 import { Appointment } from "../models/Appointment.js";
 import { Doctor } from "../models/Doctor.js";
 import { Patient } from "../models/Patient.js";
-import { PatientTimlineSchema } from "../models/patientTimline.js";
+import { PatientTimline } from "../models/patientTimline.js";
 
 export const getDoctor = async (req, res) => {
   try {
@@ -63,7 +63,7 @@ export const updateDoctorAppointments = async (req, res) => {
       }
     );
 
-    const timeline = new PatientTimlineSchema({
+    const timeline = new PatientTimline({
       patient: appointment.patient,
       appointment: appointment._id,
       approve: appointment.approve,

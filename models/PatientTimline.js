@@ -13,7 +13,7 @@ const patientTimlineSchema = new mongoose.Schema({
   patient: { type: mongoose.Schema.Types.ObjectId, ref: "Patient" },
 });
 
-export const PatientTimlineSchema = mongoose.model(
+export const PatientTimline = mongoose.model(
   "PatientTimeline",
   patientTimlineSchema
 );
