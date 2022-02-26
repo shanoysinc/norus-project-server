@@ -2,7 +2,7 @@ import { Patient } from "../models/Patient.js";
 import bcyrpt from "bcrypt";
 import { Appointment } from "../models/Appointment.js";
 import { Doctor } from "../models/Doctor.js";
-import { PatientTimline } from "../models/patientTimline.js";
+import { PatientTimline } from "../models/PatientTimline.js";
 
 export const getPatient = async (req, res) => {
   try {
