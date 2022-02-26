@@ -1,6 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
+import compression from "compression";
 import AuthRouter from "./routes/authRoute.js";
 import PatientRouter from "./routes/patientRoute.js";
 import DoctorRouter from "./routes/doctorRoute.js";
@@ -8,6 +11,9 @@ import DoctorRouter from "./routes/doctorRoute.js";
 const server = express();
 const PORT = process.env.PORT || 4000;
 
+server.use(compression());
+server.use(helmet());
+server.use(mongoSanitize());
 server.use(
   cors({
     credentials: true,
