@@ -23,6 +23,9 @@ server.use(
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
+server.use("/health-check", (req, res) => {
+  res.send("server online");
+});
 //routes
 server.use(AuthRouter);
 server.use("/patient", PatientRouter);
