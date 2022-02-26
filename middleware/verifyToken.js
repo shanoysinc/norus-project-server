@@ -1,4 +1,3 @@
-import e from "express";
 import jwt from "jsonwebtoken";
 import { Roles } from "../const/index.js";
 import { Doctor } from "../models/Doctor.js";
@@ -18,7 +17,7 @@ export const verifyToken = async (req, res, next) => {
       if (userRole == Roles.DOCTOR) {
         const doctor = await Doctor.findOne({ _id: userId });
 
-        if (!doctor && doctor.token !== token) {
+        if (!doctor || doctor.token !== token) {
           return res.status(403).send("unauthorize access");
         }
         req.user = decoded;
@@ -35,7 +34,6 @@ export const verifyToken = async (req, res, next) => {
     }
     return res.status(403).send("unauthorize access");
   } catch (err) {
-    console.log(err);
     return res.status(401).send({ error: true, errorMessage: err.message });
   }
 };
