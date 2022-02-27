@@ -16,7 +16,7 @@ const patientRole = Roles.PATIENT;
 
 router.get("/", verifyToken, authRole(patientRole), getPatient);
 router.put("/", verifyToken, authRole(patientRole), editProfile);
-router.delete("/", verifyToken, authRole(patientRole), deletePatient);
+router.post("/data", verifyToken, authRole(patientRole), deletePatient);
 
 router.get("/timeline", verifyToken, authRole(patientRole), getPatientTimeline);
 

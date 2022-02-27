@@ -58,7 +58,6 @@ export const editProfile = async (req, res) => {
 export const deletePatient = async (req, res) => {
   try {
     const { password } = req.body;
-
     if (!password) {
       throw Error("invalid credentials");
     }
@@ -70,7 +69,7 @@ export const deletePatient = async (req, res) => {
     const passwordMatch = await bcyrpt.compare(password, patient.password);
 
     if (!passwordMatch) {
-      throw Error("invalid credentials");
+      throw Error("Please enter correct password");
     }
     const patientAppointments = await Appointment.find({
       patient: req.user.userId,
