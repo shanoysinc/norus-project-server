@@ -63,7 +63,11 @@ export const patientSignup = async (req, res) => {
     await patient.set({ token });
     await patient.save();
 
-    res.json({ patient: { ...patient, doctor }, auth: true });
+    const updatedPatient = await Patient.findOne({ _id: patient._id }).populate(
+      "doctor"
+    );
+
+    res.json({ patient: updatedPatient, auth: true });
   } catch (err) {
     res.status(400).json({
       error: true,
