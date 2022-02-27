@@ -42,9 +42,11 @@ const patientSchema = new mongoose.Schema({
 
   occupation: {
     type: String,
+    default: "N/A",
   },
   medicalHistoryDetails: {
     type: String,
+    default: "N/A",
   },
   IP: {
     type: String,

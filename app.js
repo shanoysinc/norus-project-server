@@ -7,10 +7,12 @@ import compression from "compression";
 import AuthRouter from "./routes/authRoute.js";
 import PatientRouter from "./routes/patientRoute.js";
 import DoctorRouter from "./routes/doctorRoute.js";
+import morgan from "morgan";
 
 const server = express();
 const PORT = process.env.PORT || 4000;
 
+server.use(morgan("tiny"));
 server.use(compression());
 server.use(helmet());
 server.use(mongoSanitize());
