@@ -30,6 +30,10 @@ export const patientSignup = async (req, res) => {
 
     const availableDoctor = await assignAvailableDoctor();
 
+    if (!availableDoctor) {
+      return res.status(400).send("There are no available Doctor");
+    }
+
     const patient = new Patient({
       firstName,
       lastName,
@@ -49,18 +53,17 @@ export const patientSignup = async (req, res) => {
 
     await patient.save();
 
-    if (availableDoctor) {
-      await Doctor.findOneAndUpdate(
-        { _id: availableDoctor._id },
-        { $push: { patients: patient._id } }
-      );
-    }
+    const doctor = await Doctor.findOneAndUpdate(
+      { _id: availableDoctor._id },
+      { $push: { patients: patient._id } }
+    );
+
     const token = generateToken(patient._id, Roles.PATIENT);
 
     await patient.set({ token });
     await patient.save();
 
-    res.json({ patient, auth: true });
+    res.json({ patient: { ...patient, doctor }, auth: true });
   } catch (err) {
     res.status(400).json({
       error: true,
@@ -73,7 +76,9 @@ export const patientLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const patient = await Patient.findOne({ email }).select("+password");
+    const patient = await Patient.findOne({ email })
+      .select("+password")
+      .populate("doctor");
 
     if (!patient) {
       throw Error("Please enter correct credentials");
