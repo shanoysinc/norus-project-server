@@ -10,7 +10,7 @@ export const getPatient = async (req, res) => {
 
     const patient = await Patient.findOne({
       _id: patientId,
-    });
+    }).populate("doctor");
 
     res.json({ auth: true, patient });
   } catch (err) {
@@ -28,11 +28,13 @@ export const getPatientTimeline = async (req, res) => {
 
     const patientTimeline = await PatientTimline.find({
       patient: patientId,
-    })
-      .skip(0)
-      .limit(10)
-      .sort({ createdAt: -1 })
-      .populate("appointment");
+    }).populate("appointment");
+
+    patientTimeline.sort(function (a, b) {
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
 
     res.json({ patientTimeline });
   } catch (err) {
