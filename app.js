@@ -9,7 +9,10 @@ import PatientRouter from "./routes/patientRoute.js";
 import DoctorRouter from "./routes/doctorRoute.js";
 import morgan from "morgan";
 
-export async function startServer({ PORT = process.env.PORT } = {}) {
+export async function startServer({
+  PORT = process.env.PORT,
+  DB_URL = process.env.MONGO_URL,
+} = {}) {
   const server = express();
 
   server.use(morgan("tiny"));
@@ -34,7 +37,7 @@ export async function startServer({ PORT = process.env.PORT } = {}) {
   server.use("/doctor", DoctorRouter);
 
   try {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(DB_URL);
     server.listen(PORT, () => console.log("server running on port", PORT));
   } catch (e) {
     return console.log(e);
