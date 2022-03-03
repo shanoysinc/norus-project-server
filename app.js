@@ -9,33 +9,34 @@ import PatientRouter from "./routes/patientRoute.js";
 import DoctorRouter from "./routes/doctorRoute.js";
 import morgan from "morgan";
 
-const server = express();
-const PORT = process.env.PORT || 4000;
+export async function startServer({ PORT = process.env.PORT } = {}) {
+  const server = express();
 
-server.use(morgan("tiny"));
-server.use(compression());
-server.use(helmet());
-server.use(mongoSanitize());
-server.use(
-  cors({
-    credentials: true,
-    origin: process.env.HOST_URL,
-  })
-);
-server.use(express.json());
-server.use(express.urlencoded({ extended: false }));
+  server.use(morgan("tiny"));
+  server.use(compression());
+  server.use(helmet());
+  server.use(mongoSanitize());
+  server.use(
+    cors({
+      credentials: true,
+      origin: process.env.HOST_URL,
+    })
+  );
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: false }));
 
-server.use("/health-check", (req, res) => {
-  res.send("server online");
-});
-//routes
-server.use(AuthRouter);
-server.use("/patient", PatientRouter);
-server.use("/doctor", DoctorRouter);
+  //routes
+  server.use("/health-check", (req, res) => {
+    res.send("server online");
+  });
+  server.use(AuthRouter);
+  server.use("/patient", PatientRouter);
+  server.use("/doctor", DoctorRouter);
 
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
     server.listen(PORT, () => console.log("server running on port", PORT));
-  })
-  .catch((e) => console.log(e));
+  } catch (e) {
+    return console.log(e);
+  }
+}
