@@ -1,4 +1,3 @@
-// import { jest } from "@jest/globals";
 import { Roles } from "../../const/index.js";
 import { generateToken } from "../../helpers/index.js";
 import {
@@ -8,7 +7,6 @@ import {
   buildReq,
   buildRes,
 } from "../../test/util/generate.js";
-// jest.useFakeTimers();
 import { verifyToken } from "../verifyToken.js";
 import { Doctor } from "../../models/Doctor.js";
 import { Patient } from "../../models/Patient.js";
