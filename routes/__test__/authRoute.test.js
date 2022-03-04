@@ -3,12 +3,17 @@ import * as generate from "../../test/util/generate.js";
 import * as dbSetup from "../../test/util/dbUtils.js";
 import axios from "axios";
 
+let patientInfo = { email: "mike@gmail.com", password: "123456" };
+let doctorInfo = {
+  email: "doc@gmail.com",
+  password: "123456",
+};
+
 let server;
 let baseURL = "http://localhost:8000";
 let baseApiClient = axios.create({ baseURL });
 let doctorOne;
 
-let patientInfo = { email: "mike@gmail.com", password: "123456" };
 process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
@@ -18,17 +23,16 @@ beforeAll(async () => {
     ORIGIN: "*",
     CORS_CREDENTIALS: false,
   });
-});
-beforeEach(async () => {
-  dbSetup.resetDb();
-  const doc = generate.doctorSignupInfo({
-    email: "doc@gmail.com",
-    password: "123456",
-  });
+  const doc = generate.doctorSignupInfo(doctorInfo);
   doctorOne = await dbSetup.createDoctor(doc);
 });
 
-afterAll(() => server.close());
+beforeEach(async () => {});
+
+afterAll(() => {
+  dbSetup.resetDb();
+  server.close();
+});
 
 describe("test auth flow", () => {
   test("test patient auth flow", async () => {
@@ -53,9 +57,51 @@ describe("test auth flow", () => {
 
     const loginData = loginResult.data;
     const loginPatient = loginData.patient;
+    const loginPatientToken = loginPatient.token;
 
-    expect(loginPatient.token).toBeTruthy();
+    expect(loginPatientToken).toBeTruthy();
     expect(loginData.auth).toBeTruthy();
     expect(loginPatient.password).toBeFalsy();
+
+    //logout current user
+    const logoutResult = await baseApiClient.post(
+      "/user/logout",
+      {},
+      {
+        headers: {
+          authorization: `Bearer ${loginPatientToken}`,
+        },
+      }
+    );
+
+    const logoutData = logoutResult.data;
+    expect(logoutData.success).toBeTruthy();
+  });
+
+  test("test doctor auth flow", async () => {
+    //login doctor
+    const loginResult = await baseApiClient.post("/doctor/login", doctorInfo);
+
+    const loginData = loginResult.data;
+    const loginDoctor = loginData.doctor;
+    const loginDoctorToken = loginDoctor.token;
+
+    expect(loginDoctorToken).toBeTruthy();
+    expect(loginData.auth).toBeTruthy();
+    expect(loginDoctor.password).toBeFalsy();
+
+    //logout current user
+    const logoutResult = await baseApiClient.post(
+      "/user/logout",
+      {},
+      {
+        headers: {
+          authorization: `Bearer ${loginDoctorToken}`,
+        },
+      }
+    );
+
+    const logoutData = logoutResult.data;
+    expect(logoutData.success).toBeTruthy();
   });
 });
