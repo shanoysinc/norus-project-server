@@ -53,7 +53,7 @@ afterAll(() => {
   server.close();
 });
 
-test("Visit doctor's authenticated route", async () => {
+test("[GET]:METHOD Visit doctor's authenticated route", async () => {
   const getDoctor = await baseApiClient.get("/doctor", {
     headers: {
       authorization: `Bearer ${currentSignInDoctor.token}`,
@@ -69,7 +69,7 @@ test("Visit doctor's authenticated route", async () => {
   expect(currentDoctor.password).toBeFalsy();
 });
 
-test("get current doctor's patients", async () => {
+test("[GET]:METHOD get current doctor's patients", async () => {
   const getPatients = await baseApiClient.get("/doctor/patients", {
     headers: {
       authorization: `Bearer ${currentSignInDoctor.token}`,
@@ -84,7 +84,7 @@ test("get current doctor's patients", async () => {
   expect(currentSignInDoctor.patients).toContain(firstIndexPatient._id);
 });
 
-test("get current doctor's appointments", async () => {
+test("[GET]:METHOD get current doctor's appointments", async () => {
   try {
     const getappointments = await baseApiClient.get("/doctor/appointments", {
       headers: {
@@ -132,7 +132,7 @@ test("get current doctor's appointments", async () => {
   }
 });
 
-test("update current doctor's appointments", async () => {
+test("[PATCH]:METHOD update current doctor's appointments", async () => {
   try {
     const getappointments = await baseApiClient.get("/doctor/appointments", {
       headers: {
@@ -178,7 +178,7 @@ test("update current doctor's appointments", async () => {
   }
 });
 
-test("Invlaid token provided to [GET]:METHOD  doctor route", async () => {
+test("[GET]:METHOD Invalid token provided to   doctor route", async () => {
   try {
     const getDoctor = await baseApiClient.get("/doctor", {
       headers: {
@@ -201,7 +201,7 @@ Object {
   }
 });
 
-test("Invlaid token provided to [GET]:METHOD  doctor patients route", async () => {
+test("[GET]:METHOD Invalid token provided to   doctor patients route", async () => {
   try {
     const getPatients = await baseApiClient.get("/doctor/patients", {
       headers: {
@@ -224,7 +224,7 @@ Object {
   }
 });
 
-test("Invlaid token provided to [GET]:METHOD  doctor appointments route", async () => {
+test("[GET]:METHOD Invalid token provided to  doctor appointments route", async () => {
   try {
     const getAppontments = await baseApiClient.get("/doctor/appointments", {
       headers: {
@@ -247,7 +247,7 @@ Object {
   }
 });
 
-test("Invlaid token provided to [PATCH]:METHOD doctor appointments route", async () => {
+test("[PATCH]:METHOD  Invlaid token provided to doctor appointments route", async () => {
   try {
     const getAppontments = await baseApiClient.patch(
       "/doctor/appointments",
@@ -274,7 +274,7 @@ Object {
   }
 });
 
-test("no data provided to [PATCH]:METHOD doctor appointments route", async () => {
+test("[PATCH]:METHOD  no data provided to doctor appointments route", async () => {
   try {
     const getAppontments = await baseApiClient.patch(
       "/doctor/appointments",
