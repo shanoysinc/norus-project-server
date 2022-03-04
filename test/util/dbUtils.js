@@ -27,3 +27,8 @@ export async function createDoctor(doctor) {
   await doc.save();
   return doc;
 }
+export async function createPatient(patient) {
+  const pat = new Patient(patient);
+  await pat.save();
+  return pat;
+}
