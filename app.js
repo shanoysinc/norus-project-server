@@ -12,7 +12,8 @@ import morgan from "morgan";
 export async function startServer({
   PORT = process.env.PORT,
   DB_URL = process.env.MONGO_URL,
-  CLIENT_URL = process.env.HOST_URL,
+  ORIGIN = process.env.HOST_URL,
+  CORS_CREDENTIALS = true,
 } = {}) {
   const server = express();
 
@@ -22,8 +23,8 @@ export async function startServer({
   server.use(mongoSanitize());
   server.use(
     cors({
-      credentials: true,
-      origin: CLIENT_URL,
+      credentials: CORS_CREDENTIALS,
+      origin: ORIGIN,
     })
   );
   server.use(express.json());
@@ -39,8 +40,9 @@ export async function startServer({
 
   try {
     await mongoose.connect(DB_URL);
-    server.listen(PORT, () => console.log("server running on port", PORT));
-    return server;
+    return server.listen(PORT, () =>
+      console.log("server running on port", PORT)
+    );
   } catch (e) {
     return console.log(e);
   }
