@@ -92,3 +92,14 @@ export function buildAppointment(overrides) {
     ...overrides,
   };
 }
+
+export function patientSignupInfo(patientInfo = {}) {
+  const patient = BuildPatient(patientInfo);
+  delete patient._id;
+  return patient;
+}
+export function doctorSignupInfo(doc = {}) {
+  const doctor = BuildDoctor(doc);
+  delete doctor._id;
+  return doctor;
+}
