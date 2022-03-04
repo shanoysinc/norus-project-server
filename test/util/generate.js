@@ -18,6 +18,7 @@ const getSymptom = (symptoms) => {
 };
 
 const getId = faker.datatype.uuid;
+const sentence = faker.lorem.sentence;
 const getFirstName = faker.name.firstName;
 const getLastName = faker.name.lastName;
 const getEmail = faker.internet.email;
@@ -83,12 +84,11 @@ export function BuildPatient(overrides) {
 
 export function buildAppointment(overrides) {
   return {
-    _id: getId(),
     symptom: getSymptom(symptoms),
-    date: getDate(),
-    time: getDate(),
+    date: getDate,
+    time: getDate,
+    details: sentence,
     doctor: "",
-    patient: "",
     ...overrides,
   };
 }
