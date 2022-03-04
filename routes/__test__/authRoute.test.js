@@ -1,6 +1,7 @@
 import { startServer } from "../../app.js";
 import * as generate from "../../test/util/generate.js";
 import * as dbSetup from "../../test/util/dbUtils.js";
+import { serverConfig } from "../../test/setup.js";
 import axios from "axios";
 
 let patientInfo = { email: "mike@gmail.com", password: "123456" };
@@ -17,17 +18,12 @@ let doctorOne;
 process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
-  server = await startServer({
-    PORT: 8000,
-    DB_URL: "mongodb://localhost:27017/docapp-test",
-    ORIGIN: "*",
-    CORS_CREDENTIALS: false,
-  });
+  server = await startServer(serverConfig);
   const doc = generate.doctorSignupInfo(doctorInfo);
   doctorOne = await dbSetup.createDoctor(doc);
 });
 
-beforeEach(async () => {});
+// beforeEach(async () => {});
 
 afterAll(() => {
   dbSetup.resetDb();
