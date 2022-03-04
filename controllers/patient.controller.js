@@ -45,17 +45,17 @@ export const getPatientTimeline = async (req, res) => {
     });
   }
 };
-export const editProfile = async (req, res) => {
-  try {
-    const patientId = req.user;
+// export const editProfile = async (req, res) => {
+//   try {
+//     const patientId = req.user;
 
-    await Patient.findOneAndUpdate({ _id: patientId }, { $set: req.body });
+//     await Patient.findOneAndUpdate({ _id: patientId }, { $set: req.body });
 
-    res.json({ success: true });
-  } catch (err) {
-    res.status(401).json({ success: false });
-  }
-};
+//     res.json({ success: true });
+//   } catch (err) {
+//     res.status(401).json({ success: false });
+//   }
+// };
 
 export const deletePatient = async (req, res) => {
   try {
