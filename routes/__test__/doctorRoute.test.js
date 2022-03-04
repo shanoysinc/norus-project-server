@@ -53,22 +53,6 @@ afterAll(() => {
   server.close();
 });
 
-test("Invlaid token provided to doctor route", async () => {
-  try {
-    const getDoctor = await baseApiClient.get("/doctor", {
-      headers: {
-        authorization: `Bearer INVALID_TOKEN`,
-      },
-    });
-
-    expect(getDoctor).toBeFalsy();
-  } catch (err) {
-    expect(err).toMatchInlineSnapshot(
-      `[Error: Request failed with status code 401]`
-    );
-  }
-});
-
 test("Visit doctor's authenticated route", async () => {
   const getDoctor = await baseApiClient.get("/doctor", {
     headers: {
@@ -191,5 +175,128 @@ test("update current doctor's appointments", async () => {
     expect(updatedAppontmentTwo.data.appointment.approve).toBeFalsy();
   } catch (err) {
     throw new Error(err);
+  }
+});
+
+test("Invlaid token provided to [GET]:METHOD  doctor route", async () => {
+  try {
+    const getDoctor = await baseApiClient.get("/doctor", {
+      headers: {
+        authorization: `Bearer INVALID_TOKEN`,
+      },
+    });
+
+    expect(getDoctor).toBeFalsy();
+  } catch (err) {
+    expect(err.response.status).toBe(401);
+    expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "error": true,
+  "errorMessage": "jwt malformed",
+}
+`);
+    expect(err).toMatchInlineSnapshot(
+      `[Error: Request failed with status code 401]`
+    );
+  }
+});
+
+test("Invlaid token provided to [GET]:METHOD  doctor patients route", async () => {
+  try {
+    const getPatients = await baseApiClient.get("/doctor/patients", {
+      headers: {
+        authorization: `Bearer INVALID_TOKEN`,
+      },
+    });
+
+    expect(getPatients).toBeFalsy();
+  } catch (err) {
+    expect(err.response.status).toBe(401);
+    expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "error": true,
+  "errorMessage": "jwt malformed",
+}
+`);
+    expect(err).toMatchInlineSnapshot(
+      `[Error: Request failed with status code 401]`
+    );
+  }
+});
+
+test("Invlaid token provided to [GET]:METHOD  doctor appointments route", async () => {
+  try {
+    const getAppontments = await baseApiClient.get("/doctor/appointments", {
+      headers: {
+        authorization: `Bearer INVALID_TOKEN`,
+      },
+    });
+
+    expect(getAppontments).toBeFalsy();
+  } catch (err) {
+    expect(err.response.status).toBe(401);
+    expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "error": true,
+  "errorMessage": "jwt malformed",
+}
+`);
+    expect(err).toMatchInlineSnapshot(
+      `[Error: Request failed with status code 401]`
+    );
+  }
+});
+
+test("Invlaid token provided to [PATCH]:METHOD doctor appointments route", async () => {
+  try {
+    const getAppontments = await baseApiClient.patch(
+      "/doctor/appointments",
+      {},
+      {
+        headers: {
+          authorization: `Bearer INVALID_TOKEN`,
+        },
+      }
+    );
+
+    expect(getAppontments).toBeFalsy();
+  } catch (err) {
+    expect(err.response.status).toBe(401);
+    expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "error": true,
+  "errorMessage": "jwt malformed",
+}
+`);
+    expect(err).toMatchInlineSnapshot(
+      `[Error: Request failed with status code 401]`
+    );
+  }
+});
+
+test("no data provided to [PATCH]:METHOD doctor appointments route", async () => {
+  try {
+    const getAppontments = await baseApiClient.patch(
+      "/doctor/appointments",
+      {},
+      {
+        headers: {
+          authorization: `Bearer ${currentSignInDoctor.token}`,
+        },
+      }
+    );
+
+    expect(getAppontments).toBeFalsy();
+  } catch (err) {
+    expect(err.response.status).toBe(401);
+    expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "error": true,
+  "errorMessage": "Cannot read properties of null (reading 'patient')",
+}
+`);
+    expect(err).toMatchInlineSnapshot(
+      `[Error: Request failed with status code 401]`
+    );
   }
 });
