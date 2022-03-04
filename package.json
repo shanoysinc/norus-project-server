@@ -10,7 +10,7 @@
     "client": "cd C:/Users/sebastian/Documents/norus/doctor/norus-client & npm run dev",
     "dev": "concurrently \"npm run server\"  \"npm run client\"",
     "seed:db": "node -r dotenv/config ./tempData/seedDb.js",
-    "test": "jest --watch "
+    "test": "jest  --detectOpenHandles --watch"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "@babel/core": "^7.17.5",
     "@babel/plugin-transform-modules-commonjs": "^7.16.8",
     "@faker-js/faker": "^6.0.0-alpha.7",
+    "axios": "^0.26.0",
     "babel-jest": "^27.5.1",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
