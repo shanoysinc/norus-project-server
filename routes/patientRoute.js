@@ -3,7 +3,7 @@ import {
   createAppointment,
   deletePatient,
   getAppointments,
-  editProfile,
+  // editProfile,
   getPatient,
   getPatientTimeline,
 } from "../controllers/patient.controller.js";
@@ -15,7 +15,7 @@ const router = express.Router();
 const patientRole = Roles.PATIENT;
 
 router.get("/", verifyToken, authRole(patientRole), getPatient);
-router.put("/", verifyToken, authRole(patientRole), editProfile);
+// router.put("/", verifyToken, authRole(patientRole), editProfile);
 router.post("/data", verifyToken, authRole(patientRole), deletePatient);
 
 router.get("/timeline", verifyToken, authRole(patientRole), getPatientTimeline);
