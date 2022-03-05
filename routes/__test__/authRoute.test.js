@@ -2,25 +2,17 @@ import { startServer } from "../../app.js";
 import * as generate from "../../test/util/generate.js";
 import * as dbSetup from "../../test/util/dbUtils.js";
 import { serverConfig } from "../../test/setup.js";
-import axios from "axios";
-
-let patientInfo = { email: "mike@gmail.com", password: "123456" };
-let doctorInfo = {
-  email: "doc@gmail.com",
-  password: "123456",
-};
+import { baseApiClient } from "../../test/util/baseApiClient.js";
+import { patientInfo, doctorInfo } from "../../test/util/testData.js";
 
 let server;
-let baseURL = "http://localhost:8000";
-let baseApiClient = axios.create({ baseURL });
 let doctorOne;
 
 process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
   server = await startServer(serverConfig);
-  const doc = generate.doctorSignupInfo(doctorInfo);
-  doctorOne = await dbSetup.createDoctor(doc);
+  doctorOne = await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 });
 
 // beforeEach(async () => {});

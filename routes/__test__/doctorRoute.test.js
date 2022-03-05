@@ -2,17 +2,15 @@ import { serverConfig } from "../../test/setup.js";
 import { startServer } from "../../app.js";
 import * as generate from "../../test/util/generate.js";
 import * as dbSetup from "../../test/util/dbUtils.js";
-import axios from "axios";
-
-let patientInfo = { email: "mike@gmail.com", password: "123456" };
-let doctorInfo = {
-  email: "doc@gmail.com",
-  password: "123456",
-};
+import { baseApiClient } from "../../test/util/baseApiClient.js";
+import {
+  signupGeneratedPatient,
+  loginGeneratedDoctor,
+  loginGeneratedPatient,
+} from "../../test/util/generatedRequest.js";
+import { doctorInfo, patientInfo } from "../../test/util/testData.js";
 
 let server;
-let baseURL = "http://localhost:8000";
-let baseApiClient = axios.create({ baseURL });
 let currentSignInDoctor;
 let currentSignInPatient;
 
@@ -20,32 +18,17 @@ process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
   server = await startServer(serverConfig);
-  const genDoctor = generate.doctorSignupInfo(doctorInfo);
-  await dbSetup.createDoctor(genDoctor);
+
+  await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 
   //signup patient
-  const patientSignupInfo = generate.patientSignupInfo(patientInfo);
-  const signupPatientResult = await baseApiClient.post(
-    "/patient/signup",
-    patientSignupInfo
-  );
+  await signupGeneratedPatient(patientInfo);
 
   // login in doctor
-  const loginDoctorResult = await baseApiClient.post(
-    "/doctor/login",
-    doctorInfo
-  );
-
-  const loginDoctorData = loginDoctorResult.data;
-  currentSignInDoctor = loginDoctorData.doctor;
+  currentSignInDoctor = await loginGeneratedDoctor(doctorInfo);
 
   // login patient
-  const loginPatientResult = await baseApiClient.post(
-    "/patient/login",
-    patientInfo
-  );
-  const loginPatientData = loginPatientResult.data;
-  currentSignInPatient = loginPatientData.patient;
+  currentSignInPatient = await loginGeneratedPatient(patientInfo);
 });
 
 afterAll(() => {
