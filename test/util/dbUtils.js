@@ -2,7 +2,7 @@ import { Patient } from "../../models/Patient.js";
 import { Appointment } from "../../models/Appointment.js";
 import { Doctor } from "../../models/Doctor.js";
 import { PatientTimline } from "../../models/PatientTimline.js";
-import mongoose from "mongoose";
+import * as generate from "./generate.js";
 
 export function resetDb() {
   if (Patient.db.collections["patients"]) {
@@ -31,4 +31,9 @@ export async function createPatient(patient) {
   const pat = new Patient(patient);
   await pat.save();
   return pat;
+}
+
+export async function addGeneratedDoctorDatabase(doctorInfo) {
+  const genDoctor = generate.doctorSignupInfo(doctorInfo);
+  return await createDoctor(genDoctor);
 }
