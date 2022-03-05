@@ -8,6 +8,7 @@ import AuthRouter from "./routes/authRoute.js";
 import PatientRouter from "./routes/patientRoute.js";
 import DoctorRouter from "./routes/doctorRoute.js";
 import morgan from "morgan";
+import logger from "loglevel";
 
 export async function startServer({
   PORT = process.env.PORT,
@@ -37,11 +38,10 @@ export async function startServer({
   server.use(AuthRouter);
   server.use("/patient", PatientRouter);
   server.use("/doctor", DoctorRouter);
-
   try {
     await mongoose.connect(DB_URL);
     return server.listen(PORT, () =>
-      console.log("server running on port", PORT)
+      logger.info("server running on port", PORT)
     );
   } catch (e) {
     return console.log(e);
