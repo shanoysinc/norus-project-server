@@ -10,7 +10,12 @@
     "client": "cd C:/Users/sebastian/Documents/norus/doctor/norus-client & npm run dev",
     "dev": "concurrently \"npm run server\"  \"npm run client\"",
     "seed:db": "node -r dotenv/config ./tempData/seedDb.js",
-    "test": "jest  --detectOpenHandles --watch"
+    "lint": "npx eslint  ./index.js",
+    "lint:fix": "npx eslint  ./index.js --fix",
+    "test": "jest  --detectOpenHandles",
+    "test:watch": "jest  --detectOpenHandles --watch",
+    "test:coverage": "jest  --detectOpenHandles --coverage --forceExit",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +41,8 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
+    "eslint": "^8.10.0",
+    "husky": "^7.0.4",
     "jest": "^27.5.1"
   }
 }

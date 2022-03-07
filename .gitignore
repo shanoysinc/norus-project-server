@@ -3,3 +3,4 @@ doctor-api.http
 patient-api.http
 node_modules
 tempData
+coverage
