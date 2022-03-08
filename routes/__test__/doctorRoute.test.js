@@ -19,6 +19,9 @@ process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
   server = await startServer(serverConfig);
+});
+
+beforeEach(async () => {
   await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 
   //signup patient
@@ -31,8 +34,11 @@ beforeAll(async () => {
   currentSignInPatient = await loginGeneratedPatient(patientInfo);
 });
 
-afterAll(async () => {
+afterEach(async () => {
   await dbSetup.resetDb();
+});
+
+afterAll(async () => {
   await dbSetup.dbCloseConnection();
   await server.close();
 });
@@ -118,6 +124,14 @@ test("[GET]:METHOD get current doctor's appointments", async () => {
 
 test("[PATCH]:METHOD update current doctor's appointments", async () => {
   try {
+    const generatedAppointment = generate.buildAppointment({
+      doctor: currentSignInDoctor._id,
+    });
+    await baseApiClient.post("/patient/appointment", generatedAppointment, {
+      headers: {
+        authorization: `Bearer ${currentSignInPatient.token}`,
+      },
+    });
     const getappointments = await baseApiClient.get("/doctor/appointments", {
       headers: {
         authorization: `Bearer ${currentSignInDoctor.token}`,
@@ -158,6 +172,7 @@ test("[PATCH]:METHOD update current doctor's appointments", async () => {
     );
     expect(updatedAppontmentTwo.data.appointment.approve).toBeFalsy();
   } catch (err) {
+    console.log(err);
     throw new Error(err);
   }
 });

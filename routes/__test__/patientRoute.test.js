@@ -19,6 +19,9 @@ process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
   server = await startServer(serverConfig);
+});
+
+beforeEach(async () => {
   await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 
   //signup patient
@@ -31,9 +34,10 @@ beforeAll(async () => {
   currentSignInPatient = await loginGeneratedPatient(patientInfo);
 });
 
-afterAll(async () => {
+afterEach(async () => {
   await dbSetup.resetDb();
-
+});
+afterAll(async () => {
   await dbSetup.dbCloseConnection();
   await server.close();
 });
@@ -176,6 +180,31 @@ Object {
 `);
   }
 });
+
+test("[POST]:METHOD no password provided when deleting patient's data", async () => {
+  try {
+    const deletePatient = await baseApiClient.post(
+      "/patient/data",
+      {},
+      {
+        headers: {
+          authorization: `Bearer ${currentSignInPatient.token}`,
+        },
+      }
+    );
+
+    expect(deletePatient.data.success).toBeFalsy();
+  } catch (err) {
+    expect(err.response.status).toMatchInlineSnapshot(`401`);
+    expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "error": true,
+  "errorMessage": "invalid credentials",
+}
+`);
+  }
+});
+
 test("[POST]:METHOD invalid password when deleting patient's data", async () => {
   try {
     const deletePatient = await baseApiClient.post(
