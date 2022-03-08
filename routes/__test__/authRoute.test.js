@@ -13,11 +13,16 @@ process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
   server = await startServer(serverConfig);
+});
+beforeEach(async () => {
   doctorOne = await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 });
 
-afterAll(async () => {
+afterEach(async () => {
   await dbSetup.resetDb();
+});
+
+afterAll(async () => {
   await dbSetup.dbCloseConnection();
   server.close();
 });
@@ -72,23 +77,6 @@ describe("test auth flow", () => {
       throw new Error(err);
     }
   });
-  test("[Error] Patient already exist", async () => {
-    try {
-      //sign up patient
-      const patientSignupInfo = generate.patientSignupInfo(patientInfo);
-
-      await baseApiClient.post("/patient/signup", patientSignupInfo);
-      await baseApiClient.post("/patient/signup", patientSignupInfo);
-    } catch (err) {
-      expect(err.response.data).toMatchInlineSnapshot(`
-Object {
-  "auth": false,
-  "error": true,
-  "errorMessage": "patient already exist",
-}
-`);
-    }
-  });
 
   test("test doctor auth flow", async () => {
     try {
@@ -118,6 +106,112 @@ Object {
       expect(logoutData.success).toBeTruthy();
     } catch (err) {
       throw new Error(err);
+    }
+  });
+});
+
+describe("[PATIENT] auth errors when loggin in and signing up", () => {
+  test("[Error] Patient already exist", async () => {
+    try {
+      //sign up patient
+      const patientSignupInfo = generate.patientSignupInfo(patientInfo);
+
+      await baseApiClient.post("/patient/signup", patientSignupInfo);
+      await baseApiClient.post("/patient/signup", patientSignupInfo);
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "auth": false,
+  "error": true,
+  "errorMessage": "patient already exist",
+}
+`);
+    }
+  });
+
+  test("[Error] There are no available Doctor", async () => {
+    try {
+      await dbSetup.resetDb();
+
+      const patientSignupInfo = generate.patientSignupInfo(patientInfo);
+
+      await baseApiClient.post("/patient/signup", patientSignupInfo);
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(
+        `"There are no available Doctor"`
+      );
+    }
+  });
+
+  test("[Error] User enter Incorrect email address  for patient route when logging in", async () => {
+    try {
+      await baseApiClient.post("/patient/login", {
+        email: "Test@gmail.com",
+        password: "fjuchdu8i",
+      });
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "auth": false,
+  "error": true,
+  "errorMessage": "Please enter correct credentials",
+}
+`);
+    }
+  });
+  test("[Error] User enter Incorrect password  for patient route when logging in", async () => {
+    try {
+      const patientSignupInfo = generate.patientSignupInfo(patientInfo);
+
+      await baseApiClient.post("/patient/signup", patientSignupInfo);
+      await baseApiClient.post("/patient/login", {
+        email: patientInfo.email,
+        password: "fjuchdu8i",
+      });
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "auth": false,
+  "error": true,
+  "errorMessage": "Please enter correct credentials",
+}
+`);
+    }
+  });
+});
+
+describe("[DOCTOR] auth errors when loggin in and signing up", () => {
+  test("[Error] User enter Incorrect email address for doctor route when logging in", async () => {
+    try {
+      await baseApiClient.post("/doctor/login", {
+        email: "INCORRECT_EMAIL@gmail.com",
+        password: "INCORRECT_PASSWORD",
+      });
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "auth": false,
+  "error": true,
+  "errorMessage": "Please enter correct credentials",
+}
+`);
+    }
+  });
+
+  test("[Error] User enter Incorrect password for doctor route when logging in", async () => {
+    try {
+      await baseApiClient.post("/doctor/login", {
+        email: doctorInfo.email,
+        password: "INCORRECT_PASSWORD",
+      });
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "auth": false,
+  "error": true,
+  "errorMessage": "Please enter correct credentials",
+}
+`);
     }
   });
 });
