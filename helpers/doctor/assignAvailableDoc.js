@@ -11,7 +11,7 @@ export const assignAvailableDoctor = async () => {
     const doctor = findDocWithLeastAppointments(doctors);
     return doctor;
   } catch (err) {
-    console.log(err);
+    throw new Error(err);
   }
 };
 
