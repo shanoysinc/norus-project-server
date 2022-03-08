@@ -13,6 +13,7 @@ export const getDoctor = async (req, res) => {
   } catch (err) {
     res.status(401).json({
       error: true,
+      auth: false,
       errorMessage: err.message,
     });
   }
