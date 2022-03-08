@@ -18,8 +18,8 @@ export async function startServer({
 } = {}) {
   const server = express();
 
-  server.use(morgan("tiny"));
   server.use(compression());
+  server.use(morgan("tiny"));
   server.use(helmet());
   server.use(mongoSanitize());
   server.use(
@@ -40,10 +40,11 @@ export async function startServer({
   server.use("/doctor", DoctorRouter);
   try {
     await mongoose.connect(DB_URL);
+
     return server.listen(PORT, () =>
       logger.info("server running on port", PORT)
     );
-  } catch (e) {
-    return console.log(e);
+  } catch (err) {
+    throw new Error(err);
   }
 }
