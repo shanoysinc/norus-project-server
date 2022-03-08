@@ -142,7 +142,7 @@ export const userLogout = async (req, res) => {
   try {
     const { userId, userRole } = req.user;
 
-    if (!userId) {
+    if (!userId || !userRole) {
       throw Error("unathorize access");
     }
 
