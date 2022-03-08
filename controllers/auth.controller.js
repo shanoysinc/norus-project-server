@@ -53,7 +53,7 @@ export const patientSignup = async (req, res) => {
 
     await patient.save();
 
-    const doctor = await Doctor.findOneAndUpdate(
+    await Doctor.findOneAndUpdate(
       { _id: availableDoctor._id },
       { $push: { patients: patient._id } }
     );
