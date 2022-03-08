@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { buildRes, buildNext, buildReq } from "../../test/util/generate.js";
 import { authRole } from "../authRole.js";
 import { Roles } from "../../const/index.js";
