@@ -12,9 +12,9 @@
     "seed:db": "node -r dotenv/config ./tempData/seedDb.js",
     "lint": "npx eslint  ./index.js",
     "lint:fix": "npx eslint  ./index.js --fix",
-    "test": "jest  --detectOpenHandles",
-    "test:watch": "jest  --detectOpenHandles --watch",
-    "test:coverage": "jest  --detectOpenHandles --coverage --forceExit",
+    "test": "jest --runInBand ",
+    "test:watch": "jest  --runInBand --watch",
+    "test:coverage": "jest  --runInBand  --coverage ",
     "prepare": "husky install"
   },
   "keywords": [],
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "eslint": "^8.10.0",
-    "husky": "^7.0.4",
+    "husky": "^7.0.0",
     "jest": "^27.5.1"
   }
 }
