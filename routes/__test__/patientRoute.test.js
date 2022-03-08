@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { serverConfig } from "../../test/setup.js";
 import { startServer } from "../../app.js";
 import * as generate from "../../test/util/generate.js";
@@ -18,7 +19,6 @@ process.env.JWT_SECRET = "testsecretkey";
 
 beforeAll(async () => {
   server = await startServer(serverConfig);
-
   await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 
   //signup patient
@@ -31,9 +31,11 @@ beforeAll(async () => {
   currentSignInPatient = await loginGeneratedPatient(patientInfo);
 });
 
-afterAll(() => {
-  dbSetup.resetDb();
-  server.close();
+afterAll(async () => {
+  await dbSetup.resetDb();
+
+  await dbSetup.dbCloseConnection();
+  await server.close();
 });
 
 test("[GET]:METHOD  Visit patient's authenticated route", async () => {

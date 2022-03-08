@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { startServer } from "../../app.js";
 import * as generate from "../../test/util/generate.js";
 import * as dbSetup from "../../test/util/dbUtils.js";
@@ -15,10 +16,9 @@ beforeAll(async () => {
   doctorOne = await dbSetup.addGeneratedDoctorDatabase(doctorInfo);
 });
 
-// beforeEach(async () => {});
-
-afterAll(() => {
-  dbSetup.resetDb();
+afterAll(async () => {
+  await dbSetup.resetDb();
+  await dbSetup.dbCloseConnection();
   server.close();
 });
 
@@ -70,6 +70,23 @@ describe("test auth flow", () => {
       expect(logoutData.success).toBeTruthy();
     } catch (err) {
       throw new Error(err);
+    }
+  });
+  test("[Error] Patient already exist", async () => {
+    try {
+      //sign up patient
+      const patientSignupInfo = generate.patientSignupInfo(patientInfo);
+
+      await baseApiClient.post("/patient/signup", patientSignupInfo);
+      await baseApiClient.post("/patient/signup", patientSignupInfo);
+    } catch (err) {
+      expect(err.response.data).toMatchInlineSnapshot(`
+Object {
+  "auth": false,
+  "error": true,
+  "errorMessage": "patient already exist",
+}
+`);
     }
   });
 
