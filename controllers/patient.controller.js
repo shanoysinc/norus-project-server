@@ -131,7 +131,7 @@ export const createAppointment = async (req, res) => {
 
     const appointment = new Appointment({
       symptom,
-      details,
+      details: details.trim() == "" ? "N/A" : details.trim(),
       date,
       doctor,
       time,
