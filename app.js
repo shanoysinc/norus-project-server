@@ -7,7 +7,7 @@ import compression from "compression";
 import AuthRouter from "./routes/authRoute.js";
 import PatientRouter from "./routes/patientRoute.js";
 import DoctorRouter from "./routes/doctorRoute.js";
-import morgan from "morgan";
+// import morgan from "morgan";
 import logger from "loglevel";
 
 export async function startServer({
@@ -19,7 +19,7 @@ export async function startServer({
   const server = express();
 
   server.use(compression());
-  server.use(morgan("tiny"));
+  // server.use(morgan("tiny"));
   server.use(helmet());
   server.use(mongoSanitize());
   server.use(
