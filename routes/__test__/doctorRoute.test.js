@@ -172,7 +172,6 @@ test("[PATCH]:METHOD update current doctor's appointments", async () => {
     );
     expect(updatedAppontmentTwo.data.appointment.approve).toBeFalsy();
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 });
