@@ -87,7 +87,7 @@ export function buildAppointment(overrides) {
     symptom: getSymptom(symptoms),
     date: getDate,
     time: getDate,
-    details: sentence,
+    details: sentence(),
     doctor: "",
     ...overrides,
   };
