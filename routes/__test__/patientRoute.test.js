@@ -195,7 +195,7 @@ test("[POST]:METHOD no password provided when deleting patient's data", async ()
 
     expect(deletePatient.data.success).toBeFalsy();
   } catch (err) {
-    expect(err.response.status).toBe(401);
+    expect(err.response.status).toBe(402);
     expect(err.response.data).toMatchInlineSnapshot(`
 Object {
   "error": true,
